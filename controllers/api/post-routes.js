@@ -1,14 +1,24 @@
 const router = require("express").Router();
-const { Comment, Post } = require("../../models");
+const { Post } = require('../../models/Post');
 
 // CREATE POST
 
-router.get("/", async (req, res) => {
+router.post('/', async (req, res) => {
     try {
-        const postData = await Post.findAll({
-            include: [{ model: Comment, attributes: ["post_id"] }],
+        if (!req.body.content) {
+            res
+              .status(400)
+              .json({ message: "Please type content for the post" });
+        }
+        const dbPostData = await Post.create({
+            username: req.session.username,
+            content: req.body.content,
+            title: req.body.title,
         });
-        res.status(200).json(postData);
+
+        res
+        .status(200)
+        .json({ data: dbPostData, message: "Post created successfully!" });
     } catch (err) {
         res.status(500).json(err);
     }
@@ -16,18 +26,6 @@ router.get("/", async (req, res) => {
 
 //EDIT POST
 
-
-router.post("/", async (req, res) => {
-    try {
-        const postData = await Post.create(req.body);
-        res.status(200).json({
-            data: postData,
-            message: "Post created",
-        });
-    } catch (err) {
-        res.status(500).json(err);
-    }
-});
 
 //DELETE POST
 
