@@ -4,7 +4,7 @@ const { Comment, Post } = require("../models");
 
 //----------------------------------------------------------------- GET all posts
 
-router.get("/", async (req, res) => {
+router.get("/", authenticate, async (req, res) => {
     try {
         const postData = await Post.findAll({
             include: [{ model: Comment, attributes: ["post_id"] }],
@@ -26,7 +26,7 @@ router.get("/", async (req, res) => {
 
 //----------------------------------------------------------------- GET one post
 
-router.get("/post/:id", async (req, res) => {
+router.get("/post/:id", authenticate, async (req, res) => {
     try {
         const dbPostData = await Post.findbyPK(req.params.id, {
             include: [
@@ -48,7 +48,7 @@ router.get("/post/:id", async (req, res) => {
 
 //----------------------------------------------------------------- GET the login page
 
-router.get("/makePost", async (req, res) => {
+router.get("/makePost", authenticate, async (req, res) => {
     try {
         const postData = await Post.findAll({
             include: [{ model: Comment, attributes: ["post_id"] }],
@@ -74,14 +74,14 @@ router.get("/login", (req, res) => {
     res.render("login");
 });
 
-//router.get("*", (req, res) => {
-//    if (req.session.logged_in) {
-//      res.redirect("/");
-//      return;
-//    } else {
-//      res.redirect("/login");
-//      return;
-//    }
-//  });
+router.get("*", (req, res) => {
+    if (req.session.logged_in) {
+      res.redirect("/");
+      return;
+    } else {
+      res.redirect("/login");
+      return;
+    }
+  });
 
 module.exports = router;
