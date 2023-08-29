@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
     try {
       const postData = await Post.findByPk(req.params.id, {
-        include: [{ model: Comment, attributes: ["post_id"] }],
+        include: [{ model: Comment }],
       });
       res.status(200).json(postData);
     } catch (err) {
@@ -29,22 +29,18 @@ router.get("/:id", async (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
-        if (!req.body.content) {
-            res
-              .status(400)
-              .json({ message: "Please type content for the post" });
-        }
-        const dbPostData = await Post.create({
-            username: req.session.username,
+        const newPost = await Post.create({
+          ...req.body,
+            username: "chad",
             content: req.body.content,
             title: req.body.title,
         });
 
         res
         .status(200)
-        .json({ data: dbPostData, message: "Post created successfully!" });
+        .json(newPost);
     } catch (err) {
-        res.status(500).json(err);
+        res.status(400).json(err);
     }
 });
 

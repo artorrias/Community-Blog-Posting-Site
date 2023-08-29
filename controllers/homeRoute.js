@@ -4,7 +4,7 @@ const { Comment, Post } = require("../models");
 
 //----------------------------------------------------------------- GET all posts
 
-router.get("/", authenticate, async (req, res) => {
+router.get("/", async (req, res) => {
     try {
         const postData = await Post.findAll({
             include: [{ model: Comment, attributes: ["post_id"] }],
@@ -26,29 +26,44 @@ router.get("/", authenticate, async (req, res) => {
 
 //----------------------------------------------------------------- GET one post
 
-router.get("/post/:id", authenticate,async (req, res) => {
+router.get("/post/:id", async (req, res) => {
     try {
         const dbPostData = await Post.findbyPK(req.params.id, {
             include: [
                 { 
-                    model: Comment,
-                    attributes: [
-                        'id',
-                        'username',
-                        'comment',
-                    ],
+                    model: Comment
                 },
             ],
         });
 
         const post = dbPostData.get({ plain: true });
-        res.render('onePost', { post, logged_in: req.session.logged_in });
+        res.render('onePost', { 
+            ...post, 
+            logged_in: req.session.logged_in 
+        });
     } catch (err) {
         res.status(500).json(err);
     }
 });
 
 //----------------------------------------------------------------- GET the login page
+
+router.get("/makePost", async (req, res) => {
+    try {
+        const postData = await Post.findAll({
+            include: [{ model: Comment, attributes: ["post_id"] }],
+        });
+        const posts = postData.map((post) =>
+            post.get({ plain: true })
+        );
+
+        res.render("makePost");
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(err);
+    } 
+})
 
 router.get("/login", (req, res) => {
     if (req.session.logged_in) {
@@ -59,14 +74,14 @@ router.get("/login", (req, res) => {
     res.render("login");
 });
 
-router.get("*", (req, res) => {
-    if (req.session.logged_in) {
-      res.redirect("/");
-      return;
-    } else {
-      res.redirect("/login");
-      return;
-    }
-  });
+//router.get("*", (req, res) => {
+//    if (req.session.logged_in) {
+//      res.redirect("/");
+//      return;
+//    } else {
+//      res.redirect("/login");
+//      return;
+//    }
+//  });
 
 module.exports = router;

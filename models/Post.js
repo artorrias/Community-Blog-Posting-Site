@@ -23,7 +23,7 @@ Post.init(
         content: {
             type: DataTypes.STRING,
             allowNull: false, 
-        }
+        },
     },
     {
         sequelize,

@@ -1,6 +1,19 @@
 const router = require("express").Router();
 const { Comment } = require("../../models");
 
+router.get("/", async (req, res) => {
+    try {
+        const commentData = await Comment.findAll({
+            where: {
+                post_id: req.params.post_id,
+            },
+        });
+        res.status(200).json(commentData);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
 router.post("/", async (req, res) => {
     try {
         if (!req.body.content) {
