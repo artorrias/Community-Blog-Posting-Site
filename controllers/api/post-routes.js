@@ -1,5 +1,29 @@
 const router = require("express").Router();
-const { Post } = require('../../models/Post');
+const { Post, Comment } = require("../../models");
+
+//get posts
+
+router.get("/", async (req, res) => {
+    try {
+        const postData = await Post.findAll({
+            include: [{ model: Comment, attributes: ["post_id"] }],
+        });
+        res.status(200).json(postData);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
+router.get("/:id", async (req, res) => {
+    try {
+      const postData = await Post.findByPk(req.params.id, {
+        include: [{ model: Comment, attributes: ["post_id"] }],
+      });
+      res.status(200).json(postData);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
 
 // CREATE POST
 

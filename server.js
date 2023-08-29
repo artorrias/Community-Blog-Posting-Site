@@ -6,14 +6,19 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
 const routes = require('./controllers');
 const sequelize = require('./config/connection');
-const helpers = require('./utils');
+const helpers = require('./utils/authenticate');
 
 const app = express();
-const PORT = process.env.PORT || 3007;
+const PORT = process.env.PORT || 3010;
 
 const sess = {
-  secret: 'blog session secret',
-  cookie: {},
+  secret: 'pizza party blog',
+  cookie: {
+    maxAge: 900000,
+    httpOnly: true,
+    secure: false,
+    sameSite: "strict", 
+  },
   resave: false,
   saveUninitialized: true,
   store: new SequelizeStore({
@@ -35,5 +40,5 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(routes);
 
 sequelize.sync({ force: false }).then(() => {
-  app.listen(PORT, () => console.log('Now listening at https://localhost:'+PORT));
+  app.listen(PORT, () => console.log(`Now listening at http://localhost:${PORT}`));
 });
