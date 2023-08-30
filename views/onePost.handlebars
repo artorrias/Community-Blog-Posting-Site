@@ -1,0 +1,28 @@
+<p id="post_id" style="opacity: 0">{{post.id}}</p>
+
+<div class="card">
+    <a href="/post/{{post.id}}">
+        <div class="card-header">
+            @{{post.username}}
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{post.title}}</h5>
+            <p class="card-text">{{post.content}}</p>
+            <button class="btn btn-primary">Comment</button>
+        </div>
+        {{#each comments as |comment|}}
+        {{> commentDetails}}
+        {{/each}}
+  </a>
+</div>
+
+
+<form class="comment-maker">
+    <div class="form-group">
+        <label for="comment-text">Post Content</label>
+        <textarea class="form-control" id="comment-content" rows="10"></textarea>
+    </div>
+    <button type="submit" class="btn btn-secondary" id="submit-comment">Post Comment</button>
+</form>
+
+<script src="/js/postMaker.js"></script>

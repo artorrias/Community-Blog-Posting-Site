@@ -35,11 +35,17 @@ router.get("/post/:id", authenticate, async (req, res) => {
                 },
             ],
         });
+        const commentData = await Comment.findAll({
+            where: { post_id: req.params.id },
+        });
 
         const post = dbPostData.get({ plain: true });
+        const comments = commentData.map((comment) =>
+            comment.get({ plain: true })
+        );
         res.render('onePost', { 
-            ...post, 
-            logged_in: req.session.logged_in 
+            ...post,
+            comments,
         });
     } catch (err) {
         res.status(500).json(err);

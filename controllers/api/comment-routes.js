@@ -22,7 +22,7 @@ router.post("/", async (req, res) => {
               .json({ message: "Please type a comment" });
           }
           const commentData = await Comment.create({
-            username: req.session.username,
+            username: "chad",
             comment: req.body.comment,
             post_id: req.body.post_id,
           });

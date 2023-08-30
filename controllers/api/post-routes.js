@@ -27,10 +27,9 @@ router.get("/:id", async (req, res) => {
 
 // CREATE POST
 
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
     try {
         const newPost = await Post.create({
-          ...req.body,
             username: "chad",
             content: req.body.content,
             title: req.body.title,
@@ -40,6 +39,7 @@ router.post('/', async (req, res) => {
         .status(200)
         .json(newPost);
     } catch (err) {
+        console.log(err);
         res.status(400).json(err);
     }
 });
