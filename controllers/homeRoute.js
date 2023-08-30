@@ -26,26 +26,23 @@ router.get("/", authenticate, async (req, res) => {
 
 //----------------------------------------------------------------- GET one post
 
-router.get("/post/:id", authenticate, async (req, res) => {
+router.get("/post/:id", async (req, res) => {
     try {
         const dbPostData = await Post.findbyPK(req.params.id, {
-            include: [
-                { 
-                    model: Comment
-                },
-            ],
+            include: [{ model: Comment, attributes: ["post_id"] }],
         });
-        const commentData = await Comment.findAll({
-            where: { post_id: req.params.id },
-        });
+        //const commentData = await Comment.findAll({
+            //where: { post_id: req.params.id },
+        //});
 
         const post = dbPostData.get({ plain: true });
-        const comments = commentData.map((comment) =>
-            comment.get({ plain: true })
-        );
-        res.render('onePost', { 
-            ...post,
-            comments,
+        //const comments = commentData.map((comment) =>
+            //comment.get({ plain: true })
+        //);
+        res.render("onePost", { 
+            post,
+            logged_in: req.session.logged_in,
+            //comments,
         });
     } catch (err) {
         res.status(500).json(err);

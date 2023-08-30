@@ -15,7 +15,7 @@ const postMaker = async (event) => {
                 username: "chad", 
                 content: content 
             }),
-            headers: { "Content-Type ": "application/json" },
+            headers: { "Content-Type": "application/json" },
         });
 
         if (response.ok) {
@@ -38,7 +38,7 @@ const commentMaker = async (event) => {
         const response = await fetch("/api/comment", {
             method: "POST",
             body: JSON.stringify({ comment: comment, post_id: post_id, username: "chad",}),
-            headers: { "Content-Type ": "application/json" },
+            headers: { "Content-Type": "application/json" },
         });
 
         if (response.ok) {
