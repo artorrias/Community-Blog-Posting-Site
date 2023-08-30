@@ -28,7 +28,7 @@ router.get("/", authenticate, async (req, res) => {
 
 router.get("/post/:id", async (req, res) => {
     try {
-        const dbPostData = await Post.findbyPK(req.params.id, {
+        const dbPostData = await Post.findByPk(req.params.id, {
             include: [{ model: Comment, attributes: ["post_id"] }],
         });
         //const commentData = await Comment.findAll({
@@ -45,6 +45,7 @@ router.get("/post/:id", async (req, res) => {
             //comments,
         });
     } catch (err) {
+        console.log(err);
         res.status(500).json(err);
     }
 });
